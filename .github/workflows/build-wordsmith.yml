@@ -12,10 +12,16 @@ jobs:
      include:
       - image_name: db
         dockerfile: db/Dockerfile
+        context: ./db
+
       - image_name: web
         dockerfile: web/Dockerfile
+        context: ./web
+
       - image_name: words
         dockerfile: words/Dockerfile
+        context: ./words
+
    steps:
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
@@ -35,9 +41,9 @@ jobs:
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v5
       with:
-        context: .
+        context: ${{ matrix.context }}
         file: ./${{ matrix.dockerfile }}
         push: true
         tags: ibrahimkr/${{ matrix.image_name }}:db, ibrahimkr/${{ matrix.image_name }}:web, ibrahimkr/${{ matrix.image_name }}:words
-
+        load: false
  
